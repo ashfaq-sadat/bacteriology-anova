@@ -1,12 +1,23 @@
+
+# Imporitn gdata form raw data excel file 
 library(readxl)
 bacteriodata_pungus <- read_excel("G:/My Drive/Data Analysis Projects/Rasel Vaai/Bacteriology and Heamatology/Book1.xlsx",range = "c4:g19", col_types = c("text","text", "numeric", "numeric", "numeric"))
 
+# making the factor columns factor by as.factor command
+
 bacteriodata_pungus$TR <- as.factor(bacteriodata_pungus$TR)
+
+# Loading dplyr to enable the pipe operator and other data summaridsing options 
 library(dplyr)
+# the rename function renmaes the column names of the data frame 
 bacteriodata_pungus <- bacteriodata_pungus%>%rename(Day.30 = `Day-30`,Day.60 = `Day-60`,Day.90 = `Day-90`)
 
 library(dplyr)
+
+# summarizing the raw data by the means of their treatment groups 
 bacteriodata_pungus %>% group_by(TR, Treatments)%>%summarise(across(colnames(bacteriodata_pungus[,3:5]), list(mean = mean, sd =sd)),.groups = 'drop') -> bacterio_mean_pungus
+
+# combining the values of mean and standard deviation into one dataframe to enable export
 
 bacterio_mean_table_pungus <-
   cbind( bacterio_mean_pungus$Treatments,
